@@ -43,9 +43,12 @@ public class PlayerController : MonoBehaviour
         player.AddForce(direction1 * speed);
 
     }
-    public void resetBall()
-    {
-        player.transform.position = new Vector2(1.5f,0f);
+    public void resetBallAt(Vector2 spawn) {
+        health = maxHealth;
+        player.velocity = Vector2.zero;
+        player.transform.position = spawn;
+        launch();
+        
 
     }
 
@@ -72,7 +75,6 @@ public class PlayerController : MonoBehaviour
 
     public void enableChipAwayHealth(bool isEnabled) {
         chipAwayHealthEnabled = isEnabled;
-        Debug.Log("chip away health" + isEnabled);
     }
 
     public void disableTrail() {
@@ -92,8 +94,7 @@ public class PlayerController : MonoBehaviour
             camController.InitiateShake();
             dmgFlash.InitiateFlash();
             if (health <= 0) {
-                health = maxHealth;
-                resetBall();
+                resetBallAt(new Vector2(3.0f, 0f));
             }
         }
     }

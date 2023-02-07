@@ -85,6 +85,7 @@ public class UIController : MonoBehaviour
     }
 
     public void OnResetPressed() {
-        //Debug.Log("reset pressed");
+        Players[0].resetBallAt(new Vector2(1.5f, 0f));
+        Players[1].resetBallAt(new Vector2(4.5f, 0f));
     }
 }

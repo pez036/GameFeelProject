@@ -328,7 +328,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 595230e5e4a28f447b56b099c5c8893b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Players: []
+  Players:
+  - {fileID: 1248182271}
+  - {fileID: 829851691}
   camControl: {fileID: 0}
   walls: []
   dbController: {fileID: 0}
