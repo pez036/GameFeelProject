@@ -65,6 +65,21 @@ public class UIController : MonoBehaviour
         }
         btnActive = !btnActive;
     }
+    public void OnChipAwayHealthButtonPressed() {
+        if (btnActive) {
+            GetComponent<Image>().color = Color.black;
+            foreach (PlayerController player in Players) {
+                player.enableChipAwayHealth(false);
+            }
+        }
+        else {
+            GetComponent<Image>().color = Color.red;
+            foreach (PlayerController player in Players) {
+                player.enableChipAwayHealth(true);
+            }
+        }
+        btnActive = !btnActive;
+    }
     public void OnPlayButtonPressed() {
         //Debug.Log("play pressed");
     }
