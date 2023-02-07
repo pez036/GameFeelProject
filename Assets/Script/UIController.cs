@@ -8,6 +8,7 @@ public class UIController : MonoBehaviour
     public PlayerController[] Players;
     public CamController camControl;
     public GameObject[] walls;
+    public DamageBoarderController dbController;
     bool btnActive = false;
 
     public void OnScreenShakeButtonPressed() {
@@ -43,10 +44,12 @@ public class UIController : MonoBehaviour
     public void OnDamageBoarderButtonPressed() {
         if (btnActive) {
             //Debug.Log("damage boarder off");
+            dbController.disableFlash();
             GetComponent<Image>().color = Color.black;
         }
         else {
             //Debug.Log("damage boarder on");
+            dbController.enableFlash();
             GetComponent<Image>().color = Color.red;
         }
         btnActive = !btnActive;
@@ -62,11 +65,27 @@ public class UIController : MonoBehaviour
         }
         btnActive = !btnActive;
     }
+    public void OnChipAwayHealthButtonPressed() {
+        if (btnActive) {
+            GetComponent<Image>().color = Color.black;
+            foreach (PlayerController player in Players) {
+                player.enableChipAwayHealth(false);
+            }
+        }
+        else {
+            GetComponent<Image>().color = Color.red;
+            foreach (PlayerController player in Players) {
+                player.enableChipAwayHealth(true);
+            }
+        }
+        btnActive = !btnActive;
+    }
     public void OnPlayButtonPressed() {
         //Debug.Log("play pressed");
     }
 
     public void OnResetPressed() {
-        //Debug.Log("reset pressed");
+        Players[0].resetBallAt(new Vector2(1.5f, 0f));
+        Players[1].resetBallAt(new Vector2(4.5f, 0f));
     }
 }

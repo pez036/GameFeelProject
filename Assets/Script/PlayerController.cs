@@ -5,14 +5,20 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    private Rigidbody2D player;
-    private TrailRenderer trail;
-    public int speed = 100;
-    private float health;
+    Rigidbody2D player;
+    TrailRenderer trail;
+    float speed = 500f;
+
+    bool chipAwayHealthEnabled;
+    float health;
+    float lerpTimer;
+    float chipSpeed = 20f;
     public float maxHealth = 100f;
     public Image frontHealthBar;
     public Image backHealthBar;
+
     public CamController camController;
+    public DamageBoarderController dmgFlash;
 
     void Start()
     {
@@ -20,7 +26,12 @@ public class PlayerController : MonoBehaviour
         player = GetComponent<Rigidbody2D>();
         trail = GetComponent<TrailRenderer>();
         trail.enabled = false;
+        chipAwayHealthEnabled = false;
         launch();
+    }
+
+    void Update() {
+        updateHealthUI();
     }
 
     public void launch()
@@ -32,21 +43,38 @@ public class PlayerController : MonoBehaviour
         player.AddForce(direction1 * speed);
 
     }
-    public void resetBall()
-    {
-        player.transform.position = new Vector2(1.5f,0f);
+    public void resetBallAt(Vector2 spawn) {
+        health = maxHealth;
+        player.velocity = Vector2.zero;
+        player.transform.position = spawn;
+        launch();
+        
 
     }
 
     public void updateHealthUI() {
-        //float fillFront = frontHealthBar.fillAmount;
-        //float healthPercentage = health / maxHealth;
-        frontHealthBar.fillAmount = health / maxHealth;
+        float fillFront = frontHealthBar.fillAmount;
+        float fillBack = backHealthBar.fillAmount;
+        float healthPercentage = health / maxHealth;
+        if (chipAwayHealthEnabled && fillBack > healthPercentage) {
+            frontHealthBar.fillAmount = healthPercentage;
+            lerpTimer += Time.deltaTime;
+            float percentageComplete = lerpTimer / chipSpeed;
+            backHealthBar.fillAmount = Mathf.Lerp(fillBack, healthPercentage, percentageComplete);
+        } else {
+            backHealthBar.fillAmount = healthPercentage;
+        }
+        frontHealthBar.fillAmount = healthPercentage;
     }
 
     public void takeDamage(float dmg) {
         health -= dmg;
+        lerpTimer = 0f;
         health = Mathf.Clamp(health, 0, maxHealth);
+    }
+
+    public void enableChipAwayHealth(bool isEnabled) {
+        chipAwayHealthEnabled = isEnabled;
     }
 
     public void disableTrail() {
@@ -62,9 +90,12 @@ public class PlayerController : MonoBehaviour
             float dmg = collision.relativeVelocity.magnitude - player.velocity.magnitude;
             dmg = Mathf.Clamp(dmg, 0, dmg);
             takeDamage(dmg);
-            updateHealthUI();
+            //updateHealthUI();
             camController.InitiateShake();
-            Debug.Log(collision.gameObject.name + " lost " + dmg.ToString());
+            dmgFlash.InitiateFlash();
+            if (health <= 0) {
+                resetBallAt(new Vector2(3.0f, 0f));
+            }
         }
     }
 
