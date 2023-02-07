@@ -10,6 +10,7 @@ public class PlayerController : MonoBehaviour
     float speed = 500f;
 
     bool chipAwayHealthEnabled;
+    float damageMultiplier;
     float health;
     float lerpTimer;
     float chipSpeed = 20f;
@@ -23,6 +24,7 @@ public class PlayerController : MonoBehaviour
     void Start()
     {
         health = maxHealth;
+        damageMultiplier = 2f;
         player = GetComponent<Rigidbody2D>();
         trail = GetComponent<TrailRenderer>();
         trail.enabled = false;
@@ -45,6 +47,7 @@ public class PlayerController : MonoBehaviour
     }
     public void resetBallAt(Vector2 spawn) {
         health = maxHealth;
+        //damageMultiplier = 2f;
         player.velocity = Vector2.zero;
         player.transform.position = spawn;
         launch();
@@ -68,9 +71,17 @@ public class PlayerController : MonoBehaviour
     }
 
     public void takeDamage(float dmg) {
+        float healthPercentage = health / maxHealth;
         health -= dmg;
         lerpTimer = 0f;
-        health = Mathf.Clamp(health, 0, maxHealth);
+        if (chipAwayHealthEnabled) {
+            damageMultiplier = 5 * Mathf.Log10(4f - 3f * healthPercentage);
+        } else {
+            damageMultiplier = 2f;
+        }
+        if (health <= 0) {
+            resetBallAt(new Vector2(3.0f, 0f));
+        }
     }
 
     public void enableChipAwayHealth(bool isEnabled) {
@@ -88,14 +99,12 @@ public class PlayerController : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D collision) {
         if (collision.gameObject.CompareTag("Player")) {
             float dmg = collision.relativeVelocity.magnitude - player.velocity.magnitude;
-            dmg = Mathf.Clamp(dmg, 0, dmg);
+            dmg = Mathf.Clamp(dmg, 0, dmg) * damageMultiplier;
             takeDamage(dmg);
             //updateHealthUI();
             camController.InitiateShake();
             dmgFlash.InitiateFlash();
-            if (health <= 0) {
-                resetBallAt(new Vector2(3.0f, 0f));
-            }
+            
         }
     }
 

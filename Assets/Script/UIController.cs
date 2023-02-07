@@ -80,9 +80,6 @@ public class UIController : MonoBehaviour
         }
         btnActive = !btnActive;
     }
-    public void OnPlayButtonPressed() {
-        //Debug.Log("play pressed");
-    }
 
     public void OnResetPressed() {
         Players[0].resetBallAt(new Vector2(1.5f, 0f));
