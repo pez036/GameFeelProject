@@ -12,11 +12,11 @@ public class Wall : MonoBehaviour
         
     }
 
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if(other.gameObject.CompareTag("Player")) {
-            Instantiate(effect, transform.position, Quaternion.identity);
+    private void OnCollisionEnter2D(Collision2D collision) {
+        if(collision.gameObject.CompareTag("Player")) {
+            //Debug.Log(collision.gameObject.name);
         }
+
     }
 
     // Update is called once per frame
