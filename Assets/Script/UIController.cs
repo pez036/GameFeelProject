@@ -5,7 +5,8 @@ using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
-    public GameObject[] Players;
+    public PlayerController[] Players;
+    public CamController camControl;
     public GameObject[] walls;
     bool btnActive = false;
 
@@ -13,9 +14,11 @@ public class UIController : MonoBehaviour
         if (btnActive) {
             //Debug.Log("screen shake off");
             GetComponent<Image>().color = Color.black;
+            camControl.disableShake();
         } else {
             //Debug.Log("screen shake on");
             GetComponent<Image>().color = Color.red;
+            camControl.enableShake();
         }
         btnActive = !btnActive;
         
@@ -24,10 +27,16 @@ public class UIController : MonoBehaviour
         if (btnActive) {
             //Debug.Log("particle trail off");
             GetComponent<Image>().color = Color.black;
+            foreach (PlayerController player in Players) {
+                player.disableTrail();
+            }
         }
         else {
             //Debug.Log("particle trail on");
             GetComponent<Image>().color = Color.red;
+            foreach (PlayerController player in Players) {
+                player.enableTrail();
+            }
         }
         btnActive = !btnActive;
     }

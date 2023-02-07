@@ -6,16 +6,20 @@ using UnityEngine.UI;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D player;
+    private TrailRenderer trail;
     public int speed = 100;
     private float health;
     public float maxHealth = 100f;
     public Image frontHealthBar;
     public Image backHealthBar;
+    public CamController camController;
 
     void Start()
     {
         health = maxHealth;
         player = GetComponent<Rigidbody2D>();
+        trail = GetComponent<TrailRenderer>();
+        trail.enabled = false;
         launch();
     }
 
@@ -45,12 +49,21 @@ public class PlayerController : MonoBehaviour
         health = Mathf.Clamp(health, 0, maxHealth);
     }
 
+    public void disableTrail() {
+        GetComponent<TrailRenderer>().enabled = false;
+    }
+
+    public void enableTrail() {
+        GetComponent<TrailRenderer>().enabled = true;
+    }
+
     private void OnCollisionEnter2D(Collision2D collision) {
         if (collision.gameObject.CompareTag("Player")) {
             float dmg = collision.relativeVelocity.magnitude - player.velocity.magnitude;
             dmg = Mathf.Clamp(dmg, 0, dmg);
             takeDamage(dmg);
             updateHealthUI();
+            camController.InitiateShake();
             Debug.Log(collision.gameObject.name + " lost " + dmg.ToString());
         }
     }
