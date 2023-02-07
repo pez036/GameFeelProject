@@ -8,6 +8,7 @@ public class UIController : MonoBehaviour
     public PlayerController[] Players;
     public CamController camControl;
     public GameObject[] walls;
+    public DamageBoarderController dbController;
     bool btnActive = false;
 
     public void OnScreenShakeButtonPressed() {
@@ -43,10 +44,12 @@ public class UIController : MonoBehaviour
     public void OnDamageBoarderButtonPressed() {
         if (btnActive) {
             //Debug.Log("damage boarder off");
+            dbController.disableFlash();
             GetComponent<Image>().color = Color.black;
         }
         else {
             //Debug.Log("damage boarder on");
+            dbController.enableFlash();
             GetComponent<Image>().color = Color.red;
         }
         btnActive = !btnActive;

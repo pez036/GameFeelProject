@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     public Image frontHealthBar;
     public Image backHealthBar;
     public CamController camController;
+    public DamageBoarderController dmgFlash;
 
     void Start()
     {
@@ -64,6 +65,7 @@ public class PlayerController : MonoBehaviour
             takeDamage(dmg);
             updateHealthUI();
             camController.InitiateShake();
+            dmgFlash.InitiateFlash();
             Debug.Log(collision.gameObject.name + " lost " + dmg.ToString());
         }
     }
