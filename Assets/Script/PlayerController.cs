@@ -75,7 +75,7 @@ public class PlayerController : MonoBehaviour
         health -= dmg;
         lerpTimer = 0f;
         if (chipAwayHealthEnabled) {
-            damageMultiplier = 5 * Mathf.Log10(4f - 3f * healthPercentage);
+            damageMultiplier = 5 * Mathf.Log10(1 + 3f * healthPercentage);
         } else {
             damageMultiplier = 2f;
         }
@@ -101,7 +101,6 @@ public class PlayerController : MonoBehaviour
             float dmg = collision.relativeVelocity.magnitude - player.velocity.magnitude;
             dmg = Mathf.Clamp(dmg, 0, dmg) * damageMultiplier;
             takeDamage(dmg);
-            //updateHealthUI();
             camController.InitiateShake();
             dmgFlash.InitiateFlash();
             
