@@ -57,10 +57,15 @@ public class UIController : MonoBehaviour
     public void OnSoundEffectButtonPressed() {
         if (btnActive) {
             //Debug.Log("sound effect off");
+            foreach (PlayerController player in Players) {
+                player.enableCollisionSound(false);
+            }
             GetComponent<Image>().color = Color.black;
         }
         else {
-            //Debug.Log("sound effect on");
+            foreach (PlayerController player in Players) {
+                player.enableCollisionSound(true);
+            }
             GetComponent<Image>().color = Color.red;
         }
         btnActive = !btnActive;

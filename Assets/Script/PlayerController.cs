@@ -8,6 +8,7 @@ public class PlayerController : MonoBehaviour
     Rigidbody2D player;
     TrailRenderer trail;
     float speed = 500f;
+    bool collisionSoundEnabled;
 
     bool chipAwayHealthEnabled;
     float damageMultiplier;
@@ -20,6 +21,7 @@ public class PlayerController : MonoBehaviour
 
     public CamController camController;
     public DamageBoarderController dmgFlash;
+    public AudioSource collisionSound;
 
     void Start()
     {
@@ -29,6 +31,7 @@ public class PlayerController : MonoBehaviour
         trail = GetComponent<TrailRenderer>();
         trail.enabled = false;
         chipAwayHealthEnabled = false;
+        collisionSoundEnabled = false;
         launch();
     }
 
@@ -96,6 +99,16 @@ public class PlayerController : MonoBehaviour
         GetComponent<TrailRenderer>().enabled = true;
     }
 
+    public void enableCollisionSound(bool enabled) {
+        collisionSoundEnabled = enabled;
+    }
+
+    public void playCollisionSound() {
+        if (collisionSoundEnabled) {
+            collisionSound.Play();
+        }
+    }
+
     private void OnCollisionEnter2D(Collision2D collision) {
         if (collision.gameObject.CompareTag("Player")) {
             float dmg = collision.relativeVelocity.magnitude - player.velocity.magnitude;
@@ -103,7 +116,7 @@ public class PlayerController : MonoBehaviour
             takeDamage(dmg);
             camController.InitiateShake();
             dmgFlash.InitiateFlash();
-            
+            playCollisionSound();
         }
     }
 
